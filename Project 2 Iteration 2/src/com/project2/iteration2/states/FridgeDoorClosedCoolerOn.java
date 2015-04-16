@@ -10,7 +10,7 @@ import com.project2.iteration2.listeners.FridgeDoorCloseListener;
 import com.project2.iteration2.listeners.FridgeDoorOpenListener;
 import com.project2.iteration2.listeners.FridgeTempUnderThresholdListener;
 
-public class FridgeDoorClosedCoolerOn extends RefrigeratorState implements 
+public class FridgeDoorClosedCoolerOn extends AbsFridgeState implements 
 	FridgeTempUnderThresholdListener, FridgeDoorOpenListener, ClockTickedListener, FridgeDoorCloseListener {
 
 	private static FridgeDoorClosedCoolerOn instance;
@@ -61,10 +61,10 @@ public class FridgeDoorClosedCoolerOn extends RefrigeratorState implements
 	@Override
 	public void processEvent(ClockTickedEvent event) {
 		
-		context.setFridgeTemp(context.getFridgeTemp() - ((float) 1 / (float) minutesToCoolFridge1));
+		context.setFridgeTemp(context.getFridgeTemp() - ((float) 1 / (float) timeCool));
 		((GUI)display).setFridgeTempLbl(context.getFridgeTemp() + "");
 		
-		if((context.getFridgeTemp() < fridgeHigh) && (context.getFridgeTemp() - fridgeLow < tempDiffToStartCoolFridge)){
+		if((context.getFridgeTemp() < upperThreshold) && (context.getFridgeTemp() - lowerThreshold < tempDiffToStartCool)){
 			context.handleEvent(new FridgeTempUnderThresholdEvent(display));
 		}	
 	}

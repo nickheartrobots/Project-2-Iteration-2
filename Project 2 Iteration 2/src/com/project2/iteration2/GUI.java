@@ -592,7 +592,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 		if(args.length > 0){
 			new GUI(new File(args[0]));
 		} else {
-			new GUI(new File("input.txt"));
+			new GUI(new File("default_values.txt"));
 		}
 	}
 

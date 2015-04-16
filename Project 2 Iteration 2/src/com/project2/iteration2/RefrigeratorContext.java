@@ -6,12 +6,12 @@ import com.project2.iteration2.events.ClockTickedEvent;
 import com.project2.iteration2.events.RefrigeratorEvent;
 import com.project2.iteration2.listeners.RefrigeratorEventListener;
 import com.project2.iteration2.states.FridgeDoorClosedCoolerOff;
-import com.project2.iteration2.states.RefrigeratorState;
+import com.project2.iteration2.states.AbsFridgeState;
 
 
 public class RefrigeratorContext implements Observer{
 	private static RefrigeratorDisplay refrigeratorDisplay;
-	private RefrigeratorState currentState;
+	private AbsFridgeState currentState;
 	private static RefrigeratorContext instance;
 
 	private float roomTemp;
@@ -80,7 +80,7 @@ public class RefrigeratorContext implements Observer{
 	 * @param nextState
 	 *            the next state
 	 */
-	public void changeCurrentState(RefrigeratorState nextState) {
+	public void changeCurrentState(AbsFridgeState nextState) {
 		currentState = nextState;
 		nextState.run();
 	}

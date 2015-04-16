@@ -3,33 +3,33 @@ package com.project2.iteration2.states;
 import com.project2.iteration2.RefrigeratorContext;
 import com.project2.iteration2.RefrigeratorDisplay;
 
-public abstract class RefrigeratorState {
+public abstract class AbsFridgeState {
 	
 	protected static RefrigeratorContext context;
 	protected static RefrigeratorDisplay display;
-	protected static int fridgeLow; 
-	protected static int fridgeHigh; 
-	protected static int fridgeUp1DoorClosed;
-	protected static int fridgeUp1DoorOpen;  
-	protected static int tempDiffToStartCoolFridge;
-	protected static int minutesToCoolFridge1;
+	protected static int lowerThreshold; 
+	protected static int upperThreshold; 
+	protected static int timeRiseDoorClosed;
+	protected static int timeRiseDoorOpen;  
+	protected static int timeCool;
+	protected static int tempDiffToStartCool;
 
 	/**
 	 * Initializes the context and display
 	 */
-	protected RefrigeratorState() {
+	protected AbsFridgeState() {
 		context = RefrigeratorContext.instance();
 		display = context.getDisplay();
 	}
 	
 	public static void initialize(){
 		int[] fridgeData = context.getFridgeData();
-		fridgeLow = fridgeData[0];
-		fridgeHigh = fridgeData[1];
-		fridgeUp1DoorClosed = fridgeData[2];
-		fridgeUp1DoorOpen = fridgeData[3];
-		tempDiffToStartCoolFridge = fridgeData[4];
-		minutesToCoolFridge1 = fridgeData[5];
+		lowerThreshold = fridgeData[0];
+		upperThreshold = fridgeData[1];
+		timeRiseDoorClosed = fridgeData[2];
+		timeRiseDoorOpen = fridgeData[3];
+		tempDiffToStartCool = fridgeData[4];
+		timeCool = fridgeData[5];
 		for(int i = 0; i < fridgeData.length; i++){
 			System.out.println("fridgeData "+ fridgeData[i]);
 		}
