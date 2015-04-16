@@ -1,3 +1,4 @@
+package com.project2.iteration2;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;

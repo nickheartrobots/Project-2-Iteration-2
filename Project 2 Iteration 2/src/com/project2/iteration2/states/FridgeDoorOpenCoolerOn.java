@@ -1,3 +1,12 @@
+package com.project2.iteration2.states;
+
+import com.project2.iteration2.GUI;
+import com.project2.iteration2.events.ClockTickedEvent;
+import com.project2.iteration2.events.FridgeDoorCloseEvent;
+import com.project2.iteration2.events.FridgeTempUnderThresholdEvent;
+import com.project2.iteration2.listeners.ClockTickedListener;
+import com.project2.iteration2.listeners.FridgeDoorCloseListener;
+import com.project2.iteration2.listeners.FridgeTempUnderThresholdListener;
 
 public class FridgeDoorOpenCoolerOn extends RefrigeratorState implements 
 	FridgeDoorCloseListener, FridgeTempUnderThresholdListener, ClockTickedListener{

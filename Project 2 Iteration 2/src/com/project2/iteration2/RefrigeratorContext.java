@@ -1,5 +1,12 @@
+package com.project2.iteration2;
 import java.util.Observable;
 import java.util.Observer;
+
+import com.project2.iteration2.events.ClockTickedEvent;
+import com.project2.iteration2.events.RefrigeratorEvent;
+import com.project2.iteration2.listeners.RefrigeratorEventListener;
+import com.project2.iteration2.states.FridgeDoorClosedCoolerOff;
+import com.project2.iteration2.states.RefrigeratorState;
 
 
 public class RefrigeratorContext implements Observer{

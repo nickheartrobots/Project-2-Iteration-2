@@ -1,3 +1,6 @@
+package com.project2.iteration2;
+
+import com.project2.iteration2.events.FridgeDoorCloseEvent;
 
 public class FridgeDoorCloseButton extends GUIButton{
 

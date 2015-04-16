@@ -1,4 +1,8 @@
+package com.project2.iteration2.events;
 import javax.swing.JOptionPane;
+
+import com.project2.iteration2.listeners.FridgeDoorCloseListener;
+import com.project2.iteration2.listeners.RefrigeratorEventListener;
 
 
 public class FridgeDoorCloseEvent extends RefrigeratorEvent{

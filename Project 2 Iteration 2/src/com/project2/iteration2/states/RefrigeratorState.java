@@ -1,3 +1,7 @@
+package com.project2.iteration2.states;
+
+import com.project2.iteration2.RefrigeratorContext;
+import com.project2.iteration2.RefrigeratorDisplay;
 
 public abstract class RefrigeratorState {
 	

@@ -1,4 +1,8 @@
+package com.project2.iteration2.events;
 import javax.swing.JOptionPane;
+
+import com.project2.iteration2.listeners.ClockTickedListener;
+import com.project2.iteration2.listeners.RefrigeratorEventListener;
 
 
 public class ClockTickedEvent extends RefrigeratorEvent {
