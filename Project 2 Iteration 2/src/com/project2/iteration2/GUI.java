@@ -32,16 +32,12 @@ import javax.swing.JTextField;
  * that title.
  */
 public class GUI extends RefrigeratorDisplay implements ActionListener {
-
 	private RefrigeratorFrame frame;
-	private RefrigeratorContext context;
 
-	private int[] data = new int[14];
 	private int fridgeHigh;
 	private int fridgeLow;
 	private int freezerHigh;
 	private int freezerLow;
-	
 
 	public static final String FRIDGE_LIGHT_ON = "Fridge light <on>";
 	public static final String FRIDGE_LIGHT_OFF = "Fridge light <off>";
@@ -53,12 +49,6 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	public static final String FREEZER_COOLING_OFF = "Freezer <idle>";
 	public static final String FRIDGE_TEMP = "Fridge temp";
 	public static final String FREEZER_TEMP = "Freezer temp";
-
-	//Input variables
-	private JFileChooser fileOpen;
-	private File txtFile;
-	private String location;
-	private List<String> content = new ArrayList<String>();
 
 	private Point defaultLocation;
 	private final int frameWidth = 525;
@@ -85,53 +75,31 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	private JLabel freezerCoolingLbl;
 	private JLabel errorLbl;
 
-	//private Listen listen;
-
 	/**
 	 * Constructor with a File param.
 	 * @param file is the config File passed in as a commandline arg.
 	 */
-	public GUI(File file){
-		fileScan(file);
-
-		frame = new RefrigeratorFrame();
-		context = RefrigeratorContext.instance();
-		context.setData(data);
-		frame.add(new Panel());
-
-		frame.centerGUI();
-		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
-		frame.setLocation(this.defaultLocation);
-		frame.setTitle("Refrigerator Dashboard");
-		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
-		frame.pack();
-		frame.setVisible(true);
-
-		//setData() and init() because can't pass args to contructor of a singleton
-		//refrigerator.init(this);
-
-
-		context.initialize();
-		//start the clock.
-	}
-
-	private class RefrigeratorFrame extends JFrame{
-
-		/*
-		 * Centers the GUI on he screen instead of it appear at the top left corner.
-		 */
-		private void centerGUI() {
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			int width = (int) screenSize.getWidth();
-			int height = (int) screenSize.getHeight();
-
-			width /= 2;
-			height /= 2;
-
-			defaultLocation = new Point(width - (frameWidth / 2), height
-					- (frameHeight / 2));
+	public GUI(String path){
+		try{
+			context.setConfig(FileDecoder.instance().parseFile(path));
+		} catch(FileNotFoundException fnfe){
+//			FIXME, popup
+			System.out.println("File Not Fount");
+			System.exit(0);
 		}
+		
+		frame = new RefrigeratorFrame();
+		
+		context.initialize();
 
+		// for constraints on the GUI input variables
+		fridgeHigh = context.fridgeUpperThreshold;
+		fridgeLow = context.fridgeLowerThreshold;
+		freezerHigh = context.freezerUpperThreshold;
+		freezerLow = context.freezerLowerThreshold;
+		
+		frame.setVisible(true);
+		Clock.instance();		//Starts the Clock
 	}
 
 	/**
@@ -192,8 +160,8 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	 * @param string
 	 */
 
-	public void setFridgeTempLbl(String string) {
-		fridgeTempLbl.setText("Fridge Temp " + string);
+	public void setFridgeTempLbl(float temp) {
+		fridgeTempLbl.setText("Fridge Temp " + "<" + String.format("%2.3f", temp) + ">");
 		frame.repaint();
 	}
 
@@ -204,7 +172,6 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	public String getFridgeLightLbl() {
 		return fridgeLightLbl.getText();
 	}
-
 
 	/**
 	 * Getter for Freezer Light Label text
@@ -226,8 +193,8 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	 * Setter for Freezer Temp Label
 	 * @param freezerTempLbl - String
 	 */
-	public void setFreezerTempLbl(String freezerTempLbl) {
-		this.freezerTempLbl.setText(freezerTempLbl);
+	public void setFreezerTempLbl(float temp) {
+		this.freezerTempLbl.setText("Freezer Temp " + "<" + String.format("%2.3f", temp) + ">");
 		frame.repaint();
 	}
 
@@ -336,6 +303,34 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 
 	}
 
+	private class RefrigeratorFrame extends JFrame{
+		public RefrigeratorFrame(){
+			add(new Panel());
+
+			centerGUI();
+			setLocation(defaultLocation);
+			setTitle("Refrigerator Dashboard");
+			setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+			setPreferredSize(new Dimension(frameWidth, frameHeight));
+			pack();
+		}
+		
+		/*
+		 * Centers the GUI on he screen instead of it appear at the top left corner.
+		 */
+		private void centerGUI() {
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			int width = (int) screenSize.getWidth();
+			int height = (int) screenSize.getHeight();
+
+			width /= 2;
+			height /= 2;
+
+			defaultLocation = new Point(width - (frameWidth / 2), height
+					- (frameHeight / 2));
+		}
+	}
+	
 	/**
 	 * @author Nick Clarity
 	 * Project 2 Iteration 1
@@ -397,7 +392,6 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 						}
 					}catch(NumberFormatException nfe){
 						fridgeField.setText("");
-
 						setErrorLblVisible(true);
 						setErrorLbl("Fridge Temp must be a number.");
 					}		        	
@@ -451,7 +445,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 			openFridgeDoor.setBounds(69, 125, 150, 23);
 			add(openFridgeDoor);
 
-			openFreezerDoor = new JButton("Open Freezer Door");
+			openFreezerDoor = new FreezerDoorOpenButton("Open Freezer Door");
 			openFreezerDoor.addActionListener(GUI.this);
 			openFreezerDoor.setBounds(69, 159, 150, 23);
 			add(openFreezerDoor);
@@ -461,7 +455,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 			closeFridgeDoor.setBounds(263, 125, 150, 23);
 			add(closeFridgeDoor);
 
-			closeFreezerDoor = new JButton("Close Freezer Door");
+			closeFreezerDoor = new FreezerDoorCloseButton("Close Freezer Door");
 			closeFreezerDoor.addActionListener(GUI.this);
 			closeFreezerDoor.setBounds(263, 159, 150, 23);
 			add(closeFreezerDoor);
@@ -505,81 +499,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		((GUIButton) event.getSource()).inform(context, this);
-
 	}
-	
-	
-
-	/*
-	 * Method to input the content of the config File.
-	 * 
-	 * @param aFile - The config file for the Refrigerator System
-	 * @return the location of the file.
-	 */
-	private String fileScan(File aFile){
-		String fileName = aFile.getName().replaceFirst("[.][^.]+$", "");
-		String whereFile = aFile.getParent();
-
-		BufferedReader input = null;
-		String oneLine;
-
-		//Open the input stream
-		try {
-			input = new BufferedReader(new FileReader(aFile));
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Couldn't find file.", "File not found.", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-
-		//Read the stream
-		try {
-			while((oneLine = input.readLine()) != null){
-				content.add(oneLine);
-			}
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Unable to read file.", "IO Exception", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch(NullPointerException npe){
-			JOptionPane.showMessageDialog(null, "That file isn't there.", 
-					"Null Pointer", JOptionPane.ERROR_MESSAGE);
-			npe.printStackTrace();
-		}
-
-		//Close the input stream
-		try {
-			input.close();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Can't close output.", 
-					"IO Exception", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-		acceptFile();
-		return whereFile;
-	}
-
-	/*
-	 * If a file has been successfully read, this method parses variables from the text.
-	 * 
-	 * @return an array of ints containing all the config variables.
-	 */
-	private void acceptFile(){
-		ListIterator <String> input = content.listIterator();
-		int i = 0;
-		while(input.hasNext()){
-			data[i] = Integer.parseInt(input.next());
-			i++;
-		}
-		fridgeLow = data[0]; 
-		fridgeHigh = data[1];
-		freezerLow = data[2];
-		freezerHigh = data[3]; 
-		//print to console so we know it's there.
-		for(int val:data){
-			System.out.println(val);
-		}
-	}
-
-
 
 	/**
 	 * Main method
@@ -590,15 +510,9 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		if(args.length > 0){
-			new GUI(new File(args[0]));
+			new GUI(args[0]);
 		} else {
-			new GUI(new File("default_values.txt"));
+			new GUI("default_values.txt");
 		}
 	}
-
-
-
-
-
-
 }

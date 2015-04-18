@@ -2,14 +2,14 @@ package com.project2.iteration2.states;
 
 import com.project2.iteration2.GUI;
 import com.project2.iteration2.events.ClockTickedEvent;
-import com.project2.iteration2.events.FridgeDoorCloseEvent;
-import com.project2.iteration2.events.FridgeTempUnderThresholdEvent;
+import com.project2.iteration2.events.DoorCloseEvent;
+import com.project2.iteration2.events.TempUnderThresholdEvent;
 import com.project2.iteration2.listeners.ClockTickedListener;
-import com.project2.iteration2.listeners.FridgeDoorCloseListener;
-import com.project2.iteration2.listeners.FridgeTempUnderThresholdListener;
+import com.project2.iteration2.listeners.DoorCloseListener;
+import com.project2.iteration2.listeners.TempUnderThresholdListener;
 
 public class FridgeDoorOpenCoolerOn extends AbsFridgeState implements 
-	FridgeDoorCloseListener, FridgeTempUnderThresholdListener, ClockTickedListener{
+	DoorCloseListener, TempUnderThresholdListener, ClockTickedListener{
 	private static FridgeDoorOpenCoolerOn instance;
 
 	/**
@@ -26,14 +26,14 @@ public class FridgeDoorOpenCoolerOn extends AbsFridgeState implements
 	}
 	
 	@Override
-	public void processEvent(FridgeTempUnderThresholdEvent event) {
-		context.changeCurrentState(FridgeDoorOpenCoolerOff.instance());
+	public void processEvent(TempUnderThresholdEvent event) {
+		context.changeFridgeCurrentState(FridgeDoorOpenCoolerOff.instance());
 		
 	}
 
 	@Override
-	public void processEvent(FridgeDoorCloseEvent event) {
-		context.changeCurrentState(FridgeDoorClosedCoolerOn.instance());
+	public void processEvent(DoorCloseEvent event) {
+		context.changeFridgeCurrentState(FridgeDoorClosedCoolerOn.instance());
 		
 	}
 
@@ -41,7 +41,7 @@ public class FridgeDoorOpenCoolerOn extends AbsFridgeState implements
 	public void run() {
 		display.turnFridgeCoolerOn();
 		display.turnFridgeLightOn();
-		((GUI)display).setFridgeTempLbl(context.getFridgeTemp() + "");
+		((GUI)display).setFridgeTempLbl(context.getFridgeTemp());
 		
 	}
 
@@ -54,15 +54,11 @@ public class FridgeDoorOpenCoolerOn extends AbsFridgeState implements
 	@Override
 	public void processEvent(ClockTickedEvent event) {
 		context.setFridgeTemp(context.getFridgeTemp() - ((float) 1 / (float) timeCool));
-		((GUI)display).setFridgeTempLbl(context.getFridgeTemp() + "");
+		((GUI)display).setFridgeTempLbl(context.getFridgeTemp());
 		
 		if((context.getFridgeTemp() < upperThreshold) && (context.getFridgeTemp() - lowerThreshold < tempDiffToStartCool)){
-			context.handleEvent(new FridgeTempUnderThresholdEvent(display));
+			context.handleFridgeEvent(new TempUnderThresholdEvent(display));
 		}	
 		
 	}
-
-
-
-
 }

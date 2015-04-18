@@ -1,6 +1,6 @@
 package com.project2.iteration2;
 
-import com.project2.iteration2.events.FridgeDoorOpenEvent;
+import com.project2.iteration2.events.DoorOpenEvent;
 
 public class FridgeDoorOpenButton extends GUIButton{
 	
@@ -10,8 +10,6 @@ public class FridgeDoorOpenButton extends GUIButton{
 	
 	@Override
 	public void inform(RefrigeratorContext context, RefrigeratorDisplay source){
-		context.handleEvent(new FridgeDoorOpenEvent(source));
+		context.handleFridgeEvent(new DoorOpenEvent(source));
 	}
-
-
 }

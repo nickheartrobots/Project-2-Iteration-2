@@ -4,7 +4,6 @@ import java.util.Observable;
 
 public abstract class RefrigeratorDisplay extends Observable {
 
-
 	/**
 	 * Specifies what the display system should do. Note that the implementation has
 	 * a lot of freedom to choose its display.
@@ -75,7 +74,5 @@ public abstract class RefrigeratorDisplay extends Observable {
 	 * Indicate that the Freezer cooler is off
 	 */
 	public abstract void turnFreezerCoolerOff();
-
-
 }
 

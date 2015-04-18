@@ -1,5 +1,6 @@
 package com.project2.iteration2.states;
 
+import com.project2.iteration2.FileDecoder;
 import com.project2.iteration2.RefrigeratorContext;
 import com.project2.iteration2.RefrigeratorDisplay;
 
@@ -9,30 +10,26 @@ public abstract class AbsFridgeState {
 	protected static RefrigeratorDisplay display;
 	protected static int lowerThreshold; 
 	protected static int upperThreshold; 
-	protected static int timeRiseDoorClosed;
-	protected static int timeRiseDoorOpen;  
+	protected static int timeTempRiseDoorClosed;
+	protected static int timeTempRiseDoorOpen;  
 	protected static int timeCool;
 	protected static int tempDiffToStartCool;
 
+	static{
+		lowerThreshold = RefrigeratorContext.fridgeLowerThreshold;
+		upperThreshold = RefrigeratorContext.fridgeUpperThreshold;
+		timeTempRiseDoorClosed = RefrigeratorContext.fridgeTimeTempRiseDoorClosed;
+		timeTempRiseDoorOpen = RefrigeratorContext.fridgeTimeTempRiseDoorOpen;
+		timeCool = RefrigeratorContext.timeToCoolFridge;
+		tempDiffToStartCool = RefrigeratorContext.tempDiffToStartCoolFridge;
+	}
+	
 	/**
 	 * Initializes the context and display
 	 */
 	protected AbsFridgeState() {
 		context = RefrigeratorContext.instance();
 		display = context.getDisplay();
-	}
-	
-	public static void initialize(){
-		int[] fridgeData = context.getFridgeData();
-		lowerThreshold = fridgeData[0];
-		upperThreshold = fridgeData[1];
-		timeRiseDoorClosed = fridgeData[2];
-		timeRiseDoorOpen = fridgeData[3];
-		tempDiffToStartCool = fridgeData[4];
-		timeCool = fridgeData[5];
-		for(int i = 0; i < fridgeData.length; i++){
-			System.out.println("fridgeData "+ fridgeData[i]);
-		}
 	}
 	
 	/**
@@ -45,10 +42,4 @@ public abstract class AbsFridgeState {
 	 * remove the state as a listener for the appropriate events.
 	 */
 	public abstract void leave();
-
-
-	
-	
-	
-
 }

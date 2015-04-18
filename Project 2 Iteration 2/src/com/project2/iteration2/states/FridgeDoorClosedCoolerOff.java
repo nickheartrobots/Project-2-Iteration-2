@@ -2,16 +2,16 @@ package com.project2.iteration2.states;
 
 import com.project2.iteration2.GUI;
 import com.project2.iteration2.events.ClockTickedEvent;
-import com.project2.iteration2.events.FridgeDoorCloseEvent;
-import com.project2.iteration2.events.FridgeDoorOpenEvent;
-import com.project2.iteration2.events.FridgeTempOverThresholdEvent;
+import com.project2.iteration2.events.DoorCloseEvent;
+import com.project2.iteration2.events.DoorOpenEvent;
+import com.project2.iteration2.events.TempOverThresholdEvent;
 import com.project2.iteration2.listeners.ClockTickedListener;
-import com.project2.iteration2.listeners.FridgeDoorCloseListener;
-import com.project2.iteration2.listeners.FridgeDoorOpenListener;
-import com.project2.iteration2.listeners.FridgeTempOverThresholdListener;
+import com.project2.iteration2.listeners.DoorCloseListener;
+import com.project2.iteration2.listeners.DoorOpenListener;
+import com.project2.iteration2.listeners.TempOverThresholdListener;
 
 public class FridgeDoorClosedCoolerOff extends AbsFridgeState 
-	implements FridgeDoorOpenListener, FridgeTempOverThresholdListener, ClockTickedListener, FridgeDoorCloseListener{
+	implements DoorOpenListener, TempOverThresholdListener, ClockTickedListener, DoorCloseListener{
 
 	private static FridgeDoorClosedCoolerOff instance;
 	
@@ -37,34 +37,28 @@ public class FridgeDoorClosedCoolerOff extends AbsFridgeState
 	public void run() {
 		display.turnFridgeLightOff();
 		display.turnFridgeCoolerOff();
-		((GUI)display).setFridgeTempLbl(context.getFridgeTemp() + "");
+		((GUI)display).setFridgeTempLbl(context.getFridgeTemp());
 	}
 
 	@Override
 	public void leave() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
 	 * handle door open event
 	 * 
 	 */
-
 	@Override
-	public void processEvent(FridgeDoorOpenEvent event) {
-
-		context.changeCurrentState(FridgeDoorOpenCoolerOff.instance());
+	public void processEvent(DoorOpenEvent event) {
+		context.changeFridgeCurrentState(FridgeDoorOpenCoolerOff.instance());
 	}
 	
 	/**
 	 * 
 	 * handle door close event, since people push buttons just to see what they do
 	 */
-
-
 	@Override
-	public void processEvent(FridgeDoorCloseEvent event) {
+	public void processEvent(DoorCloseEvent event) {
 		//do nothing
 		
 	}
@@ -73,26 +67,22 @@ public class FridgeDoorClosedCoolerOff extends AbsFridgeState
 	 * handle temp goes over threshold event
 	 * 
 	 */
-
 	@Override
-	public void processEvent(FridgeTempOverThresholdEvent event) {
-		context.changeCurrentState(FridgeDoorClosedCoolerOn.instance());
+	public void processEvent(TempOverThresholdEvent event) {
+		context.changeFridgeCurrentState(FridgeDoorClosedCoolerOn.instance());
 		
 	}
 	
 	/**
 	 * handle clockTicked even
 	 */
-
 	@Override
 	public void processEvent(ClockTickedEvent event) {
-		context.setFridgeTemp(context.getFridgeTemp() + ((float) 1/(float) timeRiseDoorClosed));
-		((GUI)display).setFridgeTempLbl(context.getFridgeTemp() + "");
-
+		context.setFridgeTemp(context.getFridgeTemp() + ((float) 1/(float) timeTempRiseDoorClosed));
+		((GUI)display).setFridgeTempLbl(context.getFridgeTemp());
 	
 		if(context.getFridgeTemp() > upperThreshold && context.getFridgeTemp() - upperThreshold >= tempDiffToStartCool){
-			context.handleEvent(new FridgeTempOverThresholdEvent(display));
+			context.handleFridgeEvent(new TempOverThresholdEvent(this));
 		}	
 	}
-
 }

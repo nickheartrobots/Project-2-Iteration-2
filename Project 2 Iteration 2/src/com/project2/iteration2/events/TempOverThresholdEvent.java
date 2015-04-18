@@ -1,20 +1,20 @@
 package com.project2.iteration2.events;
 import javax.swing.JOptionPane;
 
-import com.project2.iteration2.listeners.FridgeTempOverThresholdListener;
+import com.project2.iteration2.listeners.TempOverThresholdListener;
 import com.project2.iteration2.listeners.RefrigeratorEventListener;
 
 
-public class FridgeTempOverThresholdEvent extends RefrigeratorEvent{
+public class TempOverThresholdEvent extends RefrigeratorEvent{
 
-	public FridgeTempOverThresholdEvent(Object source) {
+	public TempOverThresholdEvent(Object source) {
 		super(source);
 	}
 
 		@Override
 		public void connectToListener(RefrigeratorEventListener listener) {
 			try{
-				((FridgeTempOverThresholdListener) listener).processEvent(this);
+				((TempOverThresholdListener) listener).processEvent(this);
 			}catch(ClassCastException cce){
 				cce.printStackTrace();
 			}

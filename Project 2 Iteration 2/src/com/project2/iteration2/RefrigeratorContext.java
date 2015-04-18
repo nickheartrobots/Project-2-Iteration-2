@@ -1,49 +1,46 @@
 package com.project2.iteration2;
-import java.util.Observable;
-import java.util.Observer;
 
-import com.project2.iteration2.events.ClockTickedEvent;
 import com.project2.iteration2.events.RefrigeratorEvent;
 import com.project2.iteration2.listeners.RefrigeratorEventListener;
+import com.project2.iteration2.states.AbsFreezerState;
+import com.project2.iteration2.states.FreezerDoorClosedCoolerOff;
 import com.project2.iteration2.states.FridgeDoorClosedCoolerOff;
 import com.project2.iteration2.states.AbsFridgeState;
 
-
-public class RefrigeratorContext implements Observer{
+public class RefrigeratorContext {
 	private static RefrigeratorDisplay refrigeratorDisplay;
-	private AbsFridgeState currentState;
+
+	private AbsFridgeState fridgeState;
+	private AbsFreezerState freezerState;
+	
 	private static RefrigeratorContext instance;
 
 	private float roomTemp;
 	private float fridgeTemp;
 	private float freezerTemp;
 	
-	private int[] fridgeData = new int[6];;
-	private int[] freezerData = new int[6];
-	
 	// config file variables
-
-	private int freezerLow;
-	private int freezerHigh; 
-	private int roomLow;
-	private int roomHigh; 
-	private int freezerUp1DoorClosed; 
-	private int freezerUp1DoorOpen;
-	private int tempDifftoStartCoolFreezer;
-	private int minutesToCoolFreezer1;
+	public static int fridgeLowerThreshold; 
+	public static int fridgeUpperThreshold; 
+	public static int freezerLowerThreshold;
+	public static int freezerUpperThreshold; 
+	public static int roomLow;
+	public static int roomHigh; 
+	public static int fridgeTimeTempRiseDoorClosed;
+	public static int fridgeTimeTempRiseDoorOpen;  
+	public static int freezerTimeTempRiseDoorClosed; 
+	public static int freezerTimeTempRiseDoorOpen;
+	public static int tempDiffToStartCoolFridge;
+	public static int tempDiffToStartCoolFreezer;
+	public static int timeToCoolFridge;
+	public static int timeToCoolFreezer;
 	
-	
-
 	/**
 	 * Make it a singleton
 	 */
 	private RefrigeratorContext() {
 		instance = this;
-		Clock.instance().addObserver(instance);
 		refrigeratorDisplay = GUI.instance();
-		currentState = FridgeDoorClosedCoolerOff.instance();
-
-
 	}
 
 	/**
@@ -63,15 +60,16 @@ public class RefrigeratorContext implements Observer{
 	 * observable for clock
 	 */
 	public void initialize() {
-		instance.changeCurrentState(FridgeDoorClosedCoolerOff.instance());
-		currentState.run();
+		fridgeState = FridgeDoorClosedCoolerOff.instance();
+		freezerState = FreezerDoorClosedCoolerOff.instance();
+
 		fridgeTemp = (roomHigh + roomLow)/2;
 		freezerTemp = roomLow/2;
+
+		fridgeState.run();
+		freezerState.run();
+		
 		System.out.println(" intialize fridgeTemp " + fridgeTemp);
-		
-		//sets all input variables in the RefrigeratorState superclass
-		currentState.initialize();
-		
 	}
 
 	/**
@@ -80,8 +78,19 @@ public class RefrigeratorContext implements Observer{
 	 * @param nextState
 	 *            the next state
 	 */
-	public void changeCurrentState(AbsFridgeState nextState) {
-		currentState = nextState;
+	public void changeFridgeCurrentState(AbsFridgeState nextState) {
+		fridgeState = nextState;
+		nextState.run();
+	}
+
+	/**
+	 * Called from the states to change the current state
+	 * 
+	 * @param nextState
+	 *            the next state
+	 */
+	public void changeFreezerCurrentState(AbsFreezerState nextState) {
+		freezerState = nextState;
 		nextState.run();
 	}
 
@@ -94,9 +103,17 @@ public class RefrigeratorContext implements Observer{
 		return refrigeratorDisplay;
 	}
 	
-	public void handleEvent(RefrigeratorEvent event){
+	public void handleFridgeEvent(RefrigeratorEvent event){
 		try{
-			event.connectToListener((RefrigeratorEventListener) currentState);
+			event.connectToListener((RefrigeratorEventListener) fridgeState);
+		}catch(ClassCastException cce){
+			cce.printStackTrace();
+		}	
+	}
+	
+	public void handleFreezerEvent(RefrigeratorEvent event){
+		try{
+			event.connectToListener((RefrigeratorEventListener) freezerState);
 		}catch(ClassCastException cce){
 			cce.printStackTrace();
 		}	
@@ -117,13 +134,7 @@ public class RefrigeratorContext implements Observer{
 	public void setFreezerTemp(float temp){
 		freezerTemp = temp;
 	}
-	
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		System.out.println("----Tick----");
-		handleEvent(new ClockTickedEvent(this));
-	}
-	
+
 	/**
 	 * Called by the GUI when the button is pressed.  Sets default temp values
 	 * to room temp based on 1) from Miscellaneous in the spec.
@@ -144,52 +155,20 @@ public class RefrigeratorContext implements Observer{
 		}
 	}
 	
-	public int[] getFridgeData(){
-		return fridgeData;
+	public void setConfig(int[] config) {
+		fridgeLowerThreshold = config[0]; 
+		fridgeUpperThreshold = config[1]; 
+		freezerLowerThreshold = config[2];
+		freezerUpperThreshold = config[3]; 
+		roomLow = config[4];
+		roomHigh = config[5]; 
+		fridgeTimeTempRiseDoorClosed = config[6];
+		fridgeTimeTempRiseDoorOpen = config[7]; 
+		freezerTimeTempRiseDoorClosed = config[8]; 
+		freezerTimeTempRiseDoorOpen = config[9];
+		tempDiffToStartCoolFridge = config[10];
+		tempDiffToStartCoolFreezer = config[11];
+		timeToCoolFridge = config[12];
+		timeToCoolFreezer = config[13];
 	}
-	
-	/**
-	 * Method called by GUI to initialized default/config variables.
-	 * The ordering is as follows:
-	 * 
-	 * 		fridgeLow = data[0]; 
-			fridgeHigh = data[1]; 
-			freezerLow = data[2];
-			freezerHigh = data[3]; 
-			roomLow = data[4];
-			roomHigh = data[5]; 
-			fridgeUp1DoorClosed = data[6];
-			fridgeUp1DoorOpen = data[7]; 
-			freezerUp1DoorClosed = data[8]; 
-			freezerUp1DoorOpen = data[9];
-			tempDiffToStartCoolFridge = data[10];
-			tempDifftoStartCoolFreezer = data[11];
-			minutesToCoolFridge1 = data[12];
-			minutesToCoolFreezer1 = data[13];
-	 * @param data
-	 */
-	public void setData(int[] data){
-		if(data.length == 14){
-			roomLow = data[4];
-			roomHigh = data[5]; 
-			
-			
-			fridgeData[0] = data[0];
-			fridgeData[1] = data[1];
-			fridgeData[2] = data[6];
-			fridgeData[3] = data[7];
-			fridgeData[4] = data[10];
-			fridgeData[5] = data[12];	
-							
-			
-			
-			freezerLow = data[2];
-			freezerHigh = data[3]; 	
-			freezerUp1DoorClosed = data[8]; 
-			freezerUp1DoorOpen = data[9];
-			tempDifftoStartCoolFreezer = data[11];
-			minutesToCoolFreezer1 = data[13];
-		}
-	}
-
 }
