@@ -75,7 +75,7 @@ public class FreezerDoorOpenCoolerOff extends AbsFreezerState implements
 
 	@Override
 	public void processEvent(ClockTickedEvent event) {
-		context.setFreezerTemp(context.getFreezerTemp() + ((float) 1/(float) timeTempRiseDoorClosed));
+		context.setFreezerTemp(context.getFreezerTemp() + ((float) 1/(float) timeTempRiseDoorOpen));
 		((GUI)display).setFreezerTempLbl(context.getFreezerTemp());
 	
 		if(context.getFreezerTemp() > upperThreshold && context.getFreezerTemp() - upperThreshold >= tempDiffToStartCool){

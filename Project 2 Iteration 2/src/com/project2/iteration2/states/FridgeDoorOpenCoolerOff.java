@@ -70,7 +70,7 @@ public class FridgeDoorOpenCoolerOff extends AbsFridgeState implements
 
 	@Override
 	public void processEvent(ClockTickedEvent event) {
-		context.setFridgeTemp(context.getFridgeTemp() + ((float) 1/(float) timeTempRiseDoorClosed));
+		context.setFridgeTemp(context.getFridgeTemp() + ((float) 1/(float) timeTempRiseDoorOpen));
 		((GUI)display).setFridgeTempLbl(context.getFridgeTemp());
 	
 		if(context.getFridgeTemp() > upperThreshold && context.getFridgeTemp() - upperThreshold >= tempDiffToStartCool){

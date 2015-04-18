@@ -88,10 +88,10 @@ public class FreezerDoorClosedCoolerOff extends AbsFreezerState
 	 */
 	@Override
 	public void processEvent(ClockTickedEvent event) {
-		context.setFreezerTemp(context.getFridgeTemp() + ((float) 1/(float) timeTempRiseDoorClosed));
-		((GUI)display).setFreezerTempLbl(context.getFridgeTemp());
+		context.setFreezerTemp(context.getFreezerTemp() + ((float) 1/(float) timeTempRiseDoorClosed));
+		((GUI)display).setFreezerTempLbl(context.getFreezerTemp());
 
-		if(context.getFreezerTemp() > upperThreshold && context.getFridgeTemp() - upperThreshold >= tempDiffToStartCool){
+		if(context.getFreezerTemp() > upperThreshold && context.getFreezerTemp() - upperThreshold >= tempDiffToStartCool){
 			context.handleFreezerEvent(new TempOverThresholdEvent(this));
 		}	
 	}
