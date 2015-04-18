@@ -68,8 +68,6 @@ public class RefrigeratorContext {
 
 		fridgeState.run();
 		freezerState.run();
-		
-		System.out.println(" intialize fridgeTemp " + fridgeTemp);
 	}
 
 	/**
@@ -103,6 +101,10 @@ public class RefrigeratorContext {
 		return refrigeratorDisplay;
 	}
 	
+	/**
+	 * handler method used for routing events related to fridge
+	 * @param event
+	 */
 	public void handleFridgeEvent(RefrigeratorEvent event){
 		try{
 			event.connectToListener((RefrigeratorEventListener) fridgeState);
@@ -111,6 +113,10 @@ public class RefrigeratorContext {
 		}	
 	}
 	
+	/**
+	 * handler method used for routing events related to freezer
+	 * @param event
+	 */
 	public void handleFreezerEvent(RefrigeratorEvent event){
 		try{
 			event.connectToListener((RefrigeratorEventListener) freezerState);
@@ -119,18 +125,34 @@ public class RefrigeratorContext {
 		}	
 	}
 	
+	/**
+	 * Getter for fridge temp
+	 * @return float
+	 */
 	public float getFridgeTemp(){
 		return fridgeTemp;
 	}
 	
+	/**
+	 * Getter for freezer temp
+	 * @return float
+	 */
 	public float getFreezerTemp(){
 		return freezerTemp;
 	}
 	
+	/**
+	 * Setter for fridge temp
+	 * @param temp
+	 */
 	public void setFridgeTemp(float temp){
 		fridgeTemp = temp;
 	}
 	
+	/**
+	 * Setter for fridge temp
+	 * @param temp
+	 */
 	public void setFreezerTemp(float temp){
 		freezerTemp = temp;
 	}
@@ -155,6 +177,10 @@ public class RefrigeratorContext {
 		}
 	}
 	
+	/**
+	 * takes in an int[] that represents the configuration of the refrigerator
+	 * @param config
+	 */
 	public void setConfig(int[] config) {
 		fridgeLowerThreshold = config[0]; 
 		fridgeUpperThreshold = config[1]; 

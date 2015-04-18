@@ -266,7 +266,6 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	/**
 	 * Sets Freezer Light Label to ON
 	 */
-
 	@Override
 	public void turnFreezerLightOn() {
 		freezerLightLbl.setText(FREEZER_LIGHT_ON);
@@ -276,7 +275,6 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	/**
 	 * Sets Freezer Light Label to OFF
 	 */
-
 	@Override
 	public void turnFreezerLightOff() {
 		freezerLightLbl.setText(FREEZER_LIGHT_OFF);
@@ -286,7 +284,6 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	/**
 	 * Sets Freezer Cooling Label to OFF
 	 */
-
 	@Override
 	public void turnFreezerCoolerOn() {
 		freezerCoolingLbl.setText(FREEZER_COOLING_ON);
@@ -296,13 +293,19 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 	/**
 	 * Sets Freezer Cooling Label to OFF
 	 */
-
 	@Override
 	public void turnFreezerCoolerOff() {
 		freezerCoolingLbl.setText(FREEZER_COOLING_OFF);
 
 	}
 
+	/**
+	 * @author Nick Clarity
+	 * Project 2 Iteration 2
+	 * Apr 17, 2015
+	 * 
+	 * GUI Frame
+	 */
 	private class RefrigeratorFrame extends JFrame{
 		public RefrigeratorFrame(){
 			add(new Panel());
@@ -355,6 +358,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 			add(lblNewLabel_2);
 
 			setRoomTemp = new JButton("Set Room Temp");
+			// for verifying input data before passing it to context
 			setRoomTemp.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					try{
@@ -377,6 +381,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 			add(setRoomTemp);
 
 			setFridgeTemp = new JButton("Set Desired Fridge Temp");
+			// for verifying input data before passing it to context
 			setFridgeTemp.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					try{
@@ -400,6 +405,7 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 			add(setFridgeTemp);
 
 			setFreezerTemp = new JButton("Set Desired Freezer Temp");
+			// for verifying input data before passing it to context
 			setFreezerTemp.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					try{
@@ -496,6 +502,9 @@ public class GUI extends RefrigeratorDisplay implements ActionListener {
 		}
 	}
 
+	/** 
+	 * calls the inform() method on the GUIButton that was clicked
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		((GUIButton) event.getSource()).inform(context, this);

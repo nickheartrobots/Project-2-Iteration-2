@@ -2,7 +2,7 @@ package com.project2.iteration2;
 
 import java.util.Observable;
 
-public abstract class RefrigeratorDisplay extends Observable {
+public abstract class RefrigeratorDisplay{
 
 	/**
 	 * Specifies what the display system should do. Note that the implementation has

@@ -10,6 +10,14 @@ import com.project2.iteration2.listeners.DoorCloseListener;
 import com.project2.iteration2.listeners.DoorOpenListener;
 import com.project2.iteration2.listeners.TempOverThresholdListener;
 
+/**
+ * @author Nick Clarity
+ * Project 2 Iteration 2
+ * Apr 17, 2015
+ * 
+ * State representing the operation of the Freezer when the Door is Closed and the
+ * Cooler is Off.
+ */
 public class FreezerDoorClosedCoolerOff extends AbsFreezerState 
 	implements DoorOpenListener, TempOverThresholdListener, ClockTickedListener, DoorCloseListener{
 
@@ -22,9 +30,9 @@ public class FreezerDoorClosedCoolerOff extends AbsFreezerState
 	}
 	
 	/**
-	 * returns the instance
+	 * For Singleton
 	 * 
-	 * @return this object
+	 * @return only instance of FreezerDoorOpenCoolerOff
 	 */
 	public static FreezerDoorClosedCoolerOff instance() {
 		if (instance == null) {
@@ -50,7 +58,6 @@ public class FreezerDoorClosedCoolerOff extends AbsFreezerState
 	 * handle door open event
 	 * 
 	 */
-
 	@Override
 	public void processEvent(DoorOpenEvent event) {
 		context.changeFreezerCurrentState(FreezerDoorOpenCoolerOff.instance());
@@ -60,8 +67,6 @@ public class FreezerDoorClosedCoolerOff extends AbsFreezerState
 	 * 
 	 * handle door close event, since people push buttons just to see what they do
 	 */
-
-
 	@Override
 	public void processEvent(DoorCloseEvent event) {
 		//do nothing
@@ -72,7 +77,6 @@ public class FreezerDoorClosedCoolerOff extends AbsFreezerState
 	 * handle temp goes over threshold event
 	 * 
 	 */
-
 	@Override
 	public void processEvent(TempOverThresholdEvent event) {
 		context.changeFreezerCurrentState(FreezerDoorClosedCoolerOn.instance());
@@ -82,7 +86,6 @@ public class FreezerDoorClosedCoolerOff extends AbsFreezerState
 	/**
 	 * handle clockTicked even
 	 */
-
 	@Override
 	public void processEvent(ClockTickedEvent event) {
 		context.setFreezerTemp(context.getFridgeTemp() + ((float) 1/(float) timeTempRiseDoorClosed));

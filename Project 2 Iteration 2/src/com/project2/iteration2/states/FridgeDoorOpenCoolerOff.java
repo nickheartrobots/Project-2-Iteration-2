@@ -10,6 +10,14 @@ import com.project2.iteration2.listeners.DoorCloseListener;
 import com.project2.iteration2.listeners.DoorOpenListener;
 import com.project2.iteration2.listeners.TempOverThresholdListener;
 
+/**
+ * @author Nick Clarity
+ * Project 2 Iteration 2
+ * Apr 17, 2015
+ * 
+ * State representing the operation of the Fridge when the Door is Open and the
+ * Cooler is Off.
+ */
 public class FridgeDoorOpenCoolerOff extends AbsFridgeState implements 
 	DoorCloseListener, TempOverThresholdListener, DoorOpenListener, ClockTickedListener{
 
@@ -21,6 +29,11 @@ public class FridgeDoorOpenCoolerOff extends AbsFridgeState implements
 	private FridgeDoorOpenCoolerOff(){
 	}
 	
+	/**
+	 * For Singleton
+	 * 
+	 * @return only instance of FreezerDoorOpenCoolerOff
+	 */
 	public static FridgeDoorOpenCoolerOff instance() {
 		if (instance == null) {
 			instance = new FridgeDoorOpenCoolerOff();
